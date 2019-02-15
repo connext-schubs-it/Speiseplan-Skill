@@ -1,0 +1,17 @@
+
+.vs/
+bin/
+obj/
+
+*.lock
+*.ide-shm
+*.ide-shm
+*.ide-wal
+*.json
+*.dll
+*.pdb
+*.ide-shm
+*.cache
+*.props
+*.targets
+*.targets

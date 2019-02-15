@@ -1,0 +1,133 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Alexa.NET;
+using Alexa.NET.Request;
+using Alexa.NET.Request.Type;
+using Alexa.NET.Response;
+using AssistServer.Extension;
+using AssistServer.Extension.NewFolder;
+using AssistServer.Models.Api.Alexa.Response;
+using Essensplan.Extensions;
+using Essensplan.Klassen;
+using Essensplan.Models;
+using Essensplan.Models.Responses;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+
+namespace Essensplan.Controllers
+{
+    [Route("api/[controller]")]
+    public class AlexaController : ControllerBase
+    {
+        private readonly string api = "https://cx-schubsit.connext.de/api/speiseplan/kw/"; // Adresse der Speiseplan API
+        private readonly int defaultValue = -1;
+
+      // ##############################################################################################################
+      /// <summary>
+      /// Gibt Speisepläne an hand der Kalenderwoche und des Jahres zurück
+      /// </summary>
+      /// <param name="kw">Legt die Kalenderwoche des Jahres fest in der die Speisepläne angezeigt werden</param>
+      /// <param name="year">Legt die das Jahr fest in der die Speisepläne angezeigt werden</param>
+      /// <returns></returns>
+      private async Task<List<SpeisePlan>> GetSpeisePlaene(int kw, int year)
+        {
+            var client = new HttpClient();
+            var speisePlaene = new List<SpeisePlan>();
+            var path = $"{api}{kw}";
+            var response = await client.GetAsync(path);
+            if (response.IsSuccessStatusCode)
+            {
+                var speisePlaeneDB = JsonConvert.DeserializeObject<List<SpeisePlanDB>>(await response.Content.ReadAsStringAsync());
+                speisePlaene = SpeisePlanConverter(speisePlaeneDB);
+                speisePlaene = speisePlaene.FindAll(s => s.Kategorie != (int)MenueKategorien.Salat_1);
+                speisePlaene = speisePlaene.FindAll(s => s.Kategorie != (int)MenueKategorien.Salat_2);
+            }
+
+            return speisePlaene;
+        }
+
+        // ##############################################################################################################
+        /// <summary>
+        /// Entscheidet von welche Art die Anfrage ist und ruft die entsprechende Methode dafür auf
+        /// </summary>
+        /// <param name="anfrage">Enthält die Anfrage vom Amazon Alexa Server</param>
+        /// <returns></returns>
+        [HttpPost]
+        public dynamic Alexa([FromBody]SkillRequest anfrage)
+        {
+            try
+            {
+                if (anfrage.Context.System.ApiAccessToken == null)
+                    return new BadRequestResult();
+
+                var antwort = AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Error, FehlerTypen.FehlerAnfrage.ToDescription(), "", null, DateTime.Now, false);
+                var requestType = anfrage.GetRequestType();
+
+                if (requestType == typeof(LaunchRequest))
+                {
+                  //response = 
+                }
+
+
+                return antwort;
+            }
+            catch (Exception e)
+            {
+                CreateErrorLog(e);
+                return null;
+            }
+        }
+
+        // ##############################################################################################################
+        private List<SpeisePlan> SpeisePlanConverter(List<SpeisePlanDB> heutigeMenues)
+        {
+            var result = new List<SpeisePlan>();
+
+            foreach (SpeisePlanDB tmp in heutigeMenues)
+            {
+                foreach (Gericht gericht in tmp.Gerichte)
+                {
+                    var speise = new SpeisePlan();
+                    speise.Beschreibung = gericht.Bezeichnung;
+                    speise.Id = gericht.ID;
+                    var values = Enum.GetValues(typeof(MenueKategorienDB));
+                    foreach (MenueKategorienDB z in values)
+                    {
+                        if (gericht.Kategorie.Equals(z.ToDescription()))
+                        {
+                            speise.Kategorie = z.AsInt();
+                        }
+                    }
+
+                    speise.Preis = Convert.ToDouble(gericht.Preis);
+                    speise.Datum = tmp.Datum;
+                    result.Add(speise);
+                }
+            }
+            return result;
+        }
+
+        // ##############################################################################################################
+        /// <summary>
+        /// Erzeugt eine Fehlermeldung
+        /// </summary>
+        /// <param name="e">Exception</param>
+        private void CreateErrorLog(Exception e)
+        {
+            var path = @"C:\Users\gew\Documents\GitHub\Schubs_IT_Alexa\ErrorLog.txt";
+
+            using (var writer = new StreamWriter(path, true))
+            {                
+                writer.WriteLine("===========Start=============");
+                writer.WriteLine("Error Type: " + e.GetType().FullName);
+                writer.WriteLine("Error Message: " + e.Message);
+                writer.WriteLine("Stack Trace: " + e.StackTrace);
+                writer.WriteLine("============End==============");
+                writer.WriteLine("\n");
+            }
+        }
+    }
+}
