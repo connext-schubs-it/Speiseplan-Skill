@@ -22,7 +22,7 @@ namespace Essensplan.Controllers
     [Route("api/[controller]")]
     public class AlexaController : ControllerBase
     {
-        private readonly string api = "https://cx-schubsit.connext.de/api/speiseplan/kw/"; // Adresse der Speiseplan API
+        private readonly string api = "https://cx-schubsit-api.azurewebsites.net/api/speiseplan/kw/"; // Adresse der Speiseplan API
         private readonly int defaultValue = -1;
 
       // ##############################################################################################################
