@@ -18,7 +18,7 @@ namespace Essensplan.Controllers
     [Route("api/[controller]")]
     public class AlexaController : ControllerBase
     {
-        private readonly string api = "https://cx-schubsit-api.azurewebsites.net/api/speiseplan/kw/"; // Adresse der Speiseplan API
+        private readonly string api = "https://cx-schubsit-api.azurewebsites.net/api/speiseplan/"; // Adresse der Speiseplan API
         private readonly int defaultValue = -1;
 
       // ##############################################################################################################
@@ -28,11 +28,11 @@ namespace Essensplan.Controllers
       /// <param name="kw">Legt die Kalenderwoche des Jahres fest in der die Speisepläne angezeigt werden</param>
       /// <param name="year">Legt die das Jahr fest in der die Speisepläne angezeigt werden</param>
       /// <returns></returns>
-      private async Task<List<SpeisePlan>> GetSpeisePlaene(int kw, int year)
+      private async Task<List<SpeisePlan>> GetSpeisePlaeneNachKW(int kw, int year)
         {
             var client = new HttpClient();
             var speisePlaene = new List<SpeisePlan>();
-            var path = $"{api}{kw}";
+            var path = $"{api} + kw/ + {kw}";
             var response = await client.GetAsync(path);
             if (response.IsSuccessStatusCode)
             {
@@ -44,6 +44,22 @@ namespace Essensplan.Controllers
 
             return speisePlaene;
         }
+
+      private async Task<SpeisePlan> GetSpeisePlanNachDatum(string datum)
+      {
+         var client = new HttpClient();
+         var speisePlaen = new SpeisePlan();
+         var path = $"{api} + datum/ + {datum}";
+         var response = await client.GetAsync(path);
+         if (response.IsSuccessStatusCode)
+         {
+            var speisePlaeneDB = JsonConvert.DeserializeObject<List<SpeisePlanDB>>(await response.Content.ReadAsStringAsync());
+            speisePlaen = SpeisePlanConverter(speisePlaeneDB);
+            speisePlaen = speisePlaen.FindAll(s => s.Kategorie != (int)MenueKategorien.Salat_1);
+            speisePlaen = speisePlaen.FindAll(s => s.Kategorie != (int)MenueKategorien.Salat_2);
+         }
+         return speisePlaen;
+      }
 
         // ##############################################################################################################
         /// <summary>
@@ -65,6 +81,11 @@ namespace Essensplan.Controllers
                 if (requestType == typeof(LaunchRequest))
                 {
                   //response = 
+                  //launchrequest();
+                }
+                if(requestType == typeof(IntentRequest))
+                {
+               Intents(anfrage);
                 }
 
 
@@ -83,13 +104,11 @@ namespace Essensplan.Controllers
         /// </summary>
         /// <param name="heutigeMenues">Enthält alle Speisen aus der Format für den heutigen Tag</param>
         /// <returns></returns>
-        private List<SpeisePlan> SpeisePlanConverter(List<SpeisePlanDB> heutigeMenues)
+        private List<SpeisePlan> SpeisePlanConverter(SpeisePlanDB heutigeMenues)
         {
             var result = new List<SpeisePlan>();
 
-            foreach (SpeisePlanDB tmp in heutigeMenues)
-            {
-                foreach (Gericht gericht in tmp.Gerichte)
+                foreach (Gericht gericht in heutigeMenues.Gerichte)
                 {
                     var speise = new SpeisePlan();
                     speise.Beschreibung = gericht.Bezeichnung;
@@ -104,19 +123,51 @@ namespace Essensplan.Controllers
                     }
 
                     speise.Preis = Convert.ToDouble(gericht.Preis);
-                    speise.Datum = tmp.Datum;
+                    speise.Datum = heutigeMenues.Datum;
                     result.Add(speise);
                 }
-            }
             return result;
         }
+      // ##############################################################################################################
+      /// <summary>
+      ///   Konvertiert den Anforderungen entsprechend den Speiseplan in das für Alexa nötige Format
+      /// </summary>
+      /// <param name="heutigeMenues">Enthält alle Speisen aus der Format für den heutigen Tag</param>
+      /// <returns></returns>
+      private List<SpeisePlan> SpeisePlaeneConverter(List<SpeisePlanDB> heutigeMenues)
+      {
+         var result = new List<SpeisePlan>();
 
-        // ##############################################################################################################
-        /// <summary>
-        /// Erzeugt eine Fehlermeldung
-        /// </summary>
-        /// <param name="e">Exception</param>
-        private void CreateErrorLog(Exception e)
+         foreach (SpeisePlanDB tmp in heutigeMenues)
+         {
+            foreach (Gericht gericht in tmp.Gerichte)
+            {
+               var speise = new SpeisePlan();
+               speise.Beschreibung = gericht.Bezeichnung;
+               speise.Id = gericht.ID;
+               var values = Enum.GetValues(typeof(MenueKategorienDB));
+               foreach (MenueKategorienDB kategorieren in values)
+               {
+                  if (gericht.Kategorie.Equals(kategorieren.ToDescription()))
+                  {
+                     speise.Kategorie = kategorieren.AsInt();
+                  }
+               }
+
+               speise.Preis = Convert.ToDouble(gericht.Preis);
+               speise.Datum = tmp.Datum;
+               result.Add(speise);
+            }
+         }
+         return result;
+      }
+
+      // ##############################################################################################################
+      /// <summary>
+      /// Erzeugt eine Fehlermeldung
+      /// </summary>
+      /// <param name="e">Exception</param>
+      private void CreateErrorLog(Exception e)
         {
             var path = @"C:\Users\gew\Documents\GitHub\Schubs_IT_Alexa\ErrorLog.txt";
 
