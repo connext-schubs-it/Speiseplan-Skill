@@ -27,10 +27,10 @@ namespace Essensplan.Controllers
 
       // ##############################################################################################################
       /// <summary>
-      /// Gibt Speisepläne an hand der Kalenderwoche und des Jahres zurück
+      /// Gibt Speisepläne anhand der Kalenderwoche und des Jahres zurück
       /// </summary>
       /// <param name="kw">Legt die Kalenderwoche des Jahres fest in der die Speisepläne angezeigt werden</param>
-      /// <param name="year">Legt die das Jahr fest in der die Speisepläne angezeigt werden</param>
+      /// <param name="year">Legt das Jahr fest, in der die Speisepläne angezeigt werden</param>
       /// <returns></returns>
       private async Task<List<SpeisePlan>> GetSpeisePlaene(int kw, int year)
         {
@@ -79,7 +79,7 @@ namespace Essensplan.Controllers
                 CreateErrorLog(e);
                 return null;
             }
-        }
+        }       
 
         // ##############################################################################################################
         private List<SpeisePlan> SpeisePlanConverter(List<SpeisePlanDB> heutigeMenues)

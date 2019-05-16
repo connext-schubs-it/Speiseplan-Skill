@@ -18,6 +18,7 @@ namespace AssistServer.Models.Api.Alexa.Response
 
         protected static List<SkillTypContent> skillParameter = new List<SkillTypContent>
         {
+            /*
              new SkillTypContent {
                 Typ = SkillTypen.Heutiges,
                 UrlCard = "https://vivmobil.connext.de/alexa/1200x800_3.png",
@@ -43,9 +44,21 @@ namespace AssistServer.Models.Api.Alexa.Response
                  UrlCard = "https://vivmobil.connext.de/alexa/1200x800_3.png",
                  UrlTemplate = "https://vivmobil.connext.de/alexa/1024x600_3.png",
                  CardTitle = "für KW"
-             },
-          };
+             },             
+          */
+        };
 
+        // ##############################################################################################################
+        /// <summary>
+        /// Erstellt eine Ansicht, in der nur ein Text abgebildet wird. Ohne Hintergrund oder Bild
+        /// </summary>
+        /// <param name="request">Die Anfrage die vom Alexa-Gerät kam.</param>
+        /// <param name="typ">Hier wird der Typ der Anfrage angegeben.</param>
+        /// <param name="text">Der Text, der angezeigt wird.</param>
+        /// <param name="speech">Die Sprachausgabe.</param>
+        /// <param name="card">Die Ansicht, die in der Alexa-App angezeigt wird.</param>
+        /// <param name="date">Ein entsprechendes Datum, um weitere Interaktionen durchzuführen(meistens für Touch-Interaktion).</param>
+        /// <param name="shouldEndSession">Gibt an, ob das Gerät weiter zuhören soll, oder sich direkt ausschaltet.</param>
         public static SkillResponse GibEinfacheAntwort(SkillRequest request, SkillTypen typ, string text, string title, string speech, DateTime date, bool? shouldEndSession)
         {
             if (speech == null)
@@ -65,14 +78,24 @@ namespace AssistServer.Models.Api.Alexa.Response
                     Reprompt = CreateReprompt(),
                     OutputSpeech = new SsmlOutputSpeech { Ssml = $"<speak>{speech}</speak>" },
                     ShouldEndSession = shouldEndSession
-                    //ShouldEndSession = shouldEndSession,
                 }
             };            
 
             return response;
         }
 
-        public static SkillResponse CreateListSkillResponse(SkillRequest request, SkillTypen typ, List<ListItem> listItems, IOutputSpeech speech, ICard card, string title, DateTime date, bool? shouldEndSession)
+        // ##############################################################################################################
+        /// <summary>
+        /// Hiermit wird die Listenansicht erzeugt.
+        /// </summary>
+        /// <param name="request">Die Anfrage die vom Alexa-Gerät kam.</param>
+        /// <param name="typ">Hier wird der Typ der Anfrage angegeben.</param>
+        /// <param name="listItems">Der Listeninhalt, der angezeigt wird.</param>
+        /// <param name="speech">Die Sprachausgabe.</param>
+        /// <param name="card">Die Ansicht, die in der Alexa-App angezeigt wird.</param>
+        /// <param name="date">Ein entsprechendes Datum, um weitere Interaktionen durchzuführen(meistens für Touch-Interaktion).</param>
+        /// <param name="shouldEndSession">Gibt an, ob das Gerät weiter zuhören soll, oder sich direkt ausschaltet.</param>
+        public static SkillResponse ErstelleListenAnsicht(SkillRequest request, SkillTypen typ, List<ListItem> listItems, IOutputSpeech speech, ICard card, string title, DateTime date, bool? shouldEndSession)
         {
             return new SkillResponse
             {
@@ -82,7 +105,18 @@ namespace AssistServer.Models.Api.Alexa.Response
             };
         }
 
-        public static SkillResponse CreateBodySkillResponse(SkillRequest request, SkillTypen typ, BodyTemplate2 template  , IOutputSpeech speech, ICard card, DateTime date, bool? shouldEndSession)
+        // ##############################################################################################################
+        /// <summary>
+        /// Hiermit wird die Textansicht erzeugt.
+        /// </summary>
+        /// <param name="request">Die Anfrage die vom Alexa-Gerät kam.</param>
+        /// <param name="typ">Hier wird der Typ der Anfrage angegeben.</param>
+        /// <param name="template">Der Inhalt der angezeigt wird.</param>
+        /// <param name="speech">Die Sprachausgabe.</param>
+        /// <param name="card">Die Ansicht, die in der Alexa-App angezeigt wird.</param>
+        /// <param name="date">Ein entsprechendes Datum, um weitere Interaktionen durchzuführen(meistens für Touch-Interaktion).</param>
+        /// <param name="shouldEndSession">Gibt an, ob das Gerät weiter zuhören soll, oder sich direkt ausschaltet.</param>
+        public static SkillResponse ErstelleTextAnsicht(SkillRequest request, SkillTypen typ, BodyTemplate2 template  , IOutputSpeech speech, ICard card, DateTime date, bool? shouldEndSession)
         {
             return new SkillResponse
             {
@@ -207,7 +241,14 @@ namespace AssistServer.Models.Api.Alexa.Response
             };
         }
 
-        public static BodyTemplate2 AddBodyContent(SkillTypen typ, SkillBodyContent content, string title)
+        // ##############################################################################################################
+        /// <summary>
+        /// Hier wird der Inhalt erzeugt, der als Text dargestellt werden soll
+        /// </summary>
+        /// <param name="typ">Hier wird der Typ der Anfrage angegeben.</param>
+        /// <param name="content">Hier steckt die Information drinne, die in der Ansicht dargestellt werden soll.</param>
+        /// <param name="title">Die Überschrift der Ansicht.</param>
+        public static BodyTemplate2 ErstelleInhaltFürTextansicht(SkillTypen typ, SkillBodyContent content, string title)
         {
             var url = skillParameter.FirstOrDefault(v => v.Typ == typ)?.UrlTemplate;
 
@@ -235,7 +276,16 @@ namespace AssistServer.Models.Api.Alexa.Response
             };
         }
 
-        public static ListItem AddListItemWithImage(string pageToken, int id, string primaer, string sekundaer, string tertiaer, string image)
+        // ##############################################################################################################
+        /// <summary>
+        /// Erzeugt die einzelnen Einträge, die dann in der Listenansicht zu sehen sind.
+        /// </summary>
+        /// <param name="pageToken">Ist der Name der gewünschten Ansicht.</param>
+        /// <param name="id">Die eindeutige ID des Gerichts.</param>
+        /// <param name="primaer">Beschreibt den Haupttext des Eintrags.</param>
+        /// <param name="sekundaer">Hier steht der Text unter dem Haupttext.</param>
+        /// <param name="tertiaer">Hier steht der Text, der rechts am Rand ist.</param>
+        public static ListItem ErstelleListenEintrag(string pageToken, int id, string primaer, string sekundaer, string tertiaer, string image)
         {
             var listItem = new ListItem
             {
