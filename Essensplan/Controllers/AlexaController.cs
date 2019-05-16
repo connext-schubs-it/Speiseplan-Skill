@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Alexa.NET;
 using Alexa.NET.Request;
 using Alexa.NET.Request.Type;
-using Alexa.NET.Response;
 using AssistServer.Extension;
-using AssistServer.Extension.NewFolder;
 using AssistServer.Models.Api.Alexa.Response;
-using Essensplan.Extensions;
 using Essensplan.Klassen;
 using Essensplan.Models;
 using Essensplan.Models.Responses;
@@ -82,6 +78,11 @@ namespace Essensplan.Controllers
         }
 
         // ##############################################################################################################
+        /// <summary>
+        ///   Konvertiert den Anforderungen entsprechend den Speiseplan in das für Alexa nötige Format
+        /// </summary>
+        /// <param name="heutigeMenues">Enthält alle Speisen aus der Format für den heutigen Tag</param>
+        /// <returns></returns>
         private List<SpeisePlan> SpeisePlanConverter(List<SpeisePlanDB> heutigeMenues)
         {
             var result = new List<SpeisePlan>();
@@ -94,11 +95,11 @@ namespace Essensplan.Controllers
                     speise.Beschreibung = gericht.Bezeichnung;
                     speise.Id = gericht.ID;
                     var values = Enum.GetValues(typeof(MenueKategorienDB));
-                    foreach (MenueKategorienDB z in values)
+                    foreach (MenueKategorienDB kategorieren in values)
                     {
-                        if (gericht.Kategorie.Equals(z.ToDescription()))
+                        if (gericht.Kategorie.Equals(kategorieren.ToDescription()))
                         {
-                            speise.Kategorie = z.AsInt();
+                            speise.Kategorie = kategorieren.AsInt();
                         }
                     }
 
