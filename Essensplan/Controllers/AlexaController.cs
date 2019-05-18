@@ -112,7 +112,7 @@ namespace Essensplan.Controllers
          foreach (SpeisePlanDB tmp in heutigeMenues)
          {
             foreach (Gericht gericht in tmp.Gerichte)
-            {
+            {                                    ssss
                var speise = new SpeisePlan();
                speise.Beschreibung = gericht.Bezeichnung;
                speise.Id = gericht.ID;
