@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Alexa.NET.Request;
 using Alexa.NET.Request.Type;
+using Alexa.NET.Response;
 using AssistServer.Extension;
 using AssistServer.Models.Api.Alexa.Response;
 using Essensplan.Klassen;
@@ -80,15 +81,12 @@ namespace Essensplan.Controllers
 
                 if (requestType == typeof(LaunchRequest))
                 {
-                  //response = 
-                  //launchrequest();
+                  antwort = LaunchRequestHandler(anfrage);
                 }
                 if(requestType == typeof(IntentRequest))
                 {
                   //Intents(anfrage);
                 }
-
-
                 return antwort;
             }
             catch (Exception e)
@@ -96,9 +94,22 @@ namespace Essensplan.Controllers
                 CreateErrorLog(e);
                 return null;
             }
-        }       
+        }
 
-  
+      private SkillResponse LaunchRequestHandler(SkillRequest anfrage)
+      {
+         string alexasAntwort = "";
+         return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
+      }
+      /*private SkillResponse IntentRequestHandler(SkillRequest anfrage)
+      {
+         //Intents überprüfen
+         //Je nach Intent arbeiten
+
+         return 
+      } */
+
+
       // ##############################################################################################################
       /// <summary>
       ///   Konvertiert den Anforderungen entsprechend den Speiseplan in das für Alexa nötige Format
