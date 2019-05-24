@@ -85,7 +85,7 @@ namespace Essensplan.Controllers
                 }
                 if(requestType == typeof(IntentRequest))
                 {
-                  //Intents(anfrage);
+               antwort = IntentRequestHandler(anfrage);
                 }
                 return antwort;
             }
@@ -103,21 +103,14 @@ namespace Essensplan.Controllers
       }
       private SkillResponse IntentRequestHandler(SkillRequest anfrage)
       {
-         //Intents überprüfen
-         //Je nach Intent arbeiten
          var intent = (IntentRequest)anfrage.Request;
-        if(intent.Intent.Name.Equals("EinfacherIntent"))
-        {
-            string alexasAntwort = "Die Lösung ist 3";
-            return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
+         string alexasAntwort = "";
+         if (intent.Intent.Name.Equals("EinfacherIntent"))
+         {
+            alexasAntwort = "Die Lösung ist 3";
          }
-        /*else if (...)
-        {
-        ...
-        } */
-
-         return 
-      } 
+         return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
+      }
 
 
       // ##############################################################################################################
