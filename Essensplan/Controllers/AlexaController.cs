@@ -83,11 +83,15 @@ namespace Essensplan.Controllers
                 {
                   antwort = LaunchRequestHandler(anfrage);
                 }
-                if(requestType == typeof(IntentRequest))
+                else if(requestType == typeof(IntentRequest))
                 {
-                  //Intents(anfrage);
+                  antwort = IntentRequestHandler(anfrage);
                 }
-                return antwort;
+                else if (requestType == typeof(IntentRequest))
+                {
+                  antwort = SessionEndedRequestHandler(anfrage);
+                }
+                  return antwort;
             }
             catch (Exception e)
             {
@@ -103,21 +107,22 @@ namespace Essensplan.Controllers
       }
       private SkillResponse IntentRequestHandler(SkillRequest anfrage)
       {
-         //Intents überprüfen
-         //Je nach Intent arbeiten
          var intent = (IntentRequest)anfrage.Request;
-        if(intent.Intent.Name.Equals("EinfacherIntent"))
+         string alexasAntwort = "";
+        if (intent.Intent.Name.Equals("EinfacherIntent"))
         {
-            string alexasAntwort = "Die Lösung ist 3";
-            return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
+             alexasAntwort = "Die Lösung ist 3";
          }
-        /*else if (...)
-        {
-        ...
-        } */
-
-         return 
-      } 
+         /*else if (...)
+         {
+         ...
+         } */
+         return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
+      }
+      private SkillResponse SessionEndedRequestHandler(SkillRequest request)
+      {
+         return AlexaAntwortHelfer.GibEinfacheAntwort(request, SkillTypen.Ended, "Alles klar, machs gut.", "", null, DateTime.Now, true);
+      }
 
 
       // ##############################################################################################################
