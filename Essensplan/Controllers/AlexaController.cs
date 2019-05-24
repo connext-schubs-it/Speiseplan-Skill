@@ -98,7 +98,7 @@ namespace Essensplan.Controllers
 
       private SkillResponse LaunchRequestHandler(SkillRequest anfrage)
       {
-         string alexasAntwort = "";
+         string alexasAntwort = "Hallo Nutzer, ich helfe dir bei deinen täglichen Aufgaben.";
          return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
       }
       /*private SkillResponse IntentRequestHandler(SkillRequest anfrage)
