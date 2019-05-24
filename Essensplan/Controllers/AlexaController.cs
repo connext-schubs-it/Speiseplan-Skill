@@ -116,7 +116,7 @@ namespace Essensplan.Controllers
          }
          else if (intent.Intent.Name.Equals("SayMyNameIntent"))
          {
-            alexasAntwort = "Hallo" + anfrage.GetSpokenText(SlotValues.RepeatText.ToString(), "");
+            alexasAntwort = "Hallo " + anfrage.GetSpokenText(SlotValues.RepeatText.ToString(), "");
          } 
          return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
       }
