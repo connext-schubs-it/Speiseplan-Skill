@@ -101,22 +101,23 @@ namespace Essensplan.Controllers
          string alexasAntwort = "Hallo Nutzer, ich helfe dir bei deinen täglichen Aufgaben.";
          return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
       }
-      /*private SkillResponse IntentRequestHandler(SkillRequest anfrage)
+      private SkillResponse IntentRequestHandler(SkillRequest anfrage)
       {
          //Intents überprüfen
          //Je nach Intent arbeiten
          var intent = (IntentRequest)anfrage.Request;
-        if(intent.Intent.Name.Equals(""))
+        if(intent.Intent.Name.Equals("EinfacherIntent"))
+        {
+            string alexasAntwort = "Die Lösung ist 3";
+            return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
+         }
+        /*else if (...)
         {
         ...
-        }
-        else if (...)
-        {
-        ...
-        }
+        } */
 
          return 
-      } */
+      } 
 
 
       // ##############################################################################################################
