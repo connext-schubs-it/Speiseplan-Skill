@@ -83,11 +83,15 @@ namespace Essensplan.Controllers
                 {
                   antwort = LaunchRequestHandler(anfrage);
                 }
-                if(requestType == typeof(IntentRequest))
+               /*else if(requestType == typeof(IntentRequest))
                 {
-                  //Intents(anfrage);
+                
                 }
-                return antwort;
+                 else if (requestType == typeof(SessionEndedRequest){
+
+                }*/
+
+            return antwort;
             }
             catch (Exception e)
             {
