@@ -7,6 +7,7 @@ using Alexa.NET.Request;
 using Alexa.NET.Request.Type;
 using Alexa.NET.Response;
 using AssistServer.Extension;
+using AssistServer.Extension.NewFolder;
 using AssistServer.Models.Api.Alexa.Response;
 using Essensplan.Klassen;
 using Essensplan.Models;
@@ -111,12 +112,12 @@ namespace Essensplan.Controllers
          string alexasAntwort = "";
         if (intent.Intent.Name.Equals("EinfacherIntent"))
         {
-             alexasAntwort = "Die Lösung ist 3";
+            alexasAntwort = "Die Lösung ist 3";
          }
-         /*else if (...)
+         else if (intent.Intent.Name.Equals("SayMyNameIntent"))
          {
-         ...
-         } */
+            alexasAntwort = "Hallo" + anfrage.GetSpokenText(SlotValues.RepeatText.ToString(), "");
+         } 
          return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
       }
       private SkillResponse SessionEndedRequestHandler(SkillRequest request)
