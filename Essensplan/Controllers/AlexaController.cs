@@ -105,6 +105,15 @@ namespace Essensplan.Controllers
       {
          //Intents überprüfen
          //Je nach Intent arbeiten
+         var intent = (IntentRequest)anfrage.Request;
+        if(intent.Intent.Name.Equals(""))
+        {
+        ...
+        }
+        else if (...)
+        {
+        ...
+        }
 
          return 
       } */
