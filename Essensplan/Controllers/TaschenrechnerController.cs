@@ -46,7 +46,7 @@ namespace Essensplan.Controllers
                 {
                     //Tritt nur auf, wenn man den Skill startet
 
-                    string bildschirmText = "Hallo. Mit mir kannst du wie mit einem Taschenrechner rechnen";
+                    string bildschirmText = "Hallo. Ich bin ein Alexa Taschenrechner";
                     string ueberschrift = "Taschenrechner";
                     string sprachausgabe = bildschirmText;
 
@@ -90,7 +90,7 @@ namespace Essensplan.Controllers
         public SkillResponse BerechnenHelfer(SkillRequest anfrage)
         {
             var intentAnfrage = (IntentRequest)anfrage.Request;
-            int zahl1 = anfrage.GetSlotValueInt(SlotValues.Zahl_1.ToString(), defaultValue);
+            int zahl1 = anfrage.GetSlotValueInt("", defaultValue); //<-- In den leeren "" muss der Name von Slot rein, diese müssen 1 zu 1 identisch sein
             int zahl2 = 0;
             int operation = 0;
 
