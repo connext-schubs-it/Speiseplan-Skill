@@ -115,41 +115,6 @@ namespace Essensplan.Controllers
             return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Berechnen, bildschirmText, ueberschrift, sprachausgabe, DateTime.Now, false);
         }
 
-  
-      // ##############################################################################################################
-      /// <summary>
-      ///   Konvertiert den Anforderungen entsprechend den Speiseplan in das für Alexa nötige Format
-      /// </summary>
-      /// <param name="heutigeMenues">Enthält alle Speisen aus der Format für den heutigen Tag</param>
-      /// <returns></returns>
-      private List<SpeisePlan> SpeisePlanConverter(List<SpeisePlanDB> heutigeMenues)
-      {
-         var result = new List<SpeisePlan>();
-
-         foreach (SpeisePlanDB tmp in heutigeMenues)
-         {
-            foreach (Gericht gericht in tmp.Gerichte)
-            {
-               var speise = new SpeisePlan();
-               speise.Beschreibung = gericht.Bezeichnung;
-               speise.Id = gericht.ID;
-               var values = Enum.GetValues(typeof(MenueKategorienDB));
-               foreach (MenueKategorienDB kategorieren in values)
-               {
-                  if (gericht.Kategorie.Equals(kategorieren.ToDescription()))
-                  {
-                     speise.Kategorie = kategorieren.AsInt();
-                  }
-               }
-
-               speise.Preis = Convert.ToDouble(gericht.Preis);
-               speise.Datum = tmp.Datum;
-               result.Add(speise);
-            }
-         }
-         return result;
-      }
-
       // ##############################################################################################################
       /// <summary>
       /// Erzeugt eine Fehlermeldung
