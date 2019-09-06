@@ -122,7 +122,7 @@ namespace Essensplan.Controllers
       /// <param name="e">Exception</param>
       private void CreateErrorLog(Exception e)
         {
-            var path = @"C:\Users\gew\Documents\GitHub\Schubs_IT_Alexa\ErrorLog.txt";
+            var path = @"C:\Users\CX\Documents\GitHub\Schubs_IT_Alexa\ErrorLog.txt";
 
             using (var writer = new StreamWriter(path, true))
             {                
