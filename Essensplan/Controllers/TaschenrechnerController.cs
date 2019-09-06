@@ -96,12 +96,14 @@ namespace Essensplan.Controllers
 
             /*  definiere ein Array, dass folgende Wert beinhaltet: 1, 2, 3, 4
               
-                In der Anfrage muss herausgefunden werden, welche Operation gemacht werden soll
+                In der Anfrage muss herausgefunden werden, welche Zahlen verwendet werden und welche Operation gemacht werden soll
                 
                 wenn 1, dann +
                 wenn 2, dann -
                 wenn 3, dann *
                 wenn 4, dann /
+
+                ODER so wie du es in der Entwickler-Oberfläche angegeben hast
 
                 aus zahl1, zahl2 und operation soll das ergebnis geformt werden                
             */
