@@ -84,6 +84,11 @@ namespace AssistServer.Models.Api.Alexa.Response
             return response;
         }
 
+        internal static SkillResponse GibEinfacheAntwort(SkillResponse anfrage, SkillTypen ended, string alexasAnt, string v1, object p, DateTime now, bool v2)
+        {
+            throw new NotImplementedException();
+        }
+
         // ##############################################################################################################
         /// <summary>
         /// Hiermit wird die Listenansicht erzeugt.

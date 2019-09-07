@@ -7,6 +7,7 @@ using Alexa.NET.Request;
 using Alexa.NET.Request.Type;
 using Alexa.NET.Response;
 using AssistServer.Extension;
+using AssistServer.Extension.NewFolder;
 using AssistServer.Models.Api.Alexa.Response;
 using Essensplan.Klassen;
 using Essensplan.Models;
@@ -76,20 +77,21 @@ namespace Essensplan.Controllers
                 if (anfrage.Context.System.ApiAccessToken == null)
                     return new BadRequestResult();
 
-                var antwort = AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Error, FehlerTypen.FehlerAnfrage.ToDescription(), "", null, DateTime.Now, false);
+                var antwort = new SkillResponse();
+                   
                 var requestType = anfrage.GetRequestType();
 
                 if (requestType == typeof(LaunchRequest))
                 {
                   antwort = LaunchRequestHandler(anfrage);
                 }
-               /*else if(requestType == typeof(IntentRequest))
+               else if(requestType == typeof(IntentRequest))
                 {
-                
+                    antwort = IntentRequestHandler(anfrage);
                 }
-                 else if (requestType == typeof(SessionEndedRequest){
-
-                }*/
+                 else if (requestType == typeof(SessionEndedRequest)){
+                    antwort = EndRequestHelper(anfrage);
+                }
 
             return antwort;
             }
@@ -99,28 +101,82 @@ namespace Essensplan.Controllers
                 return null;
             }
         }
+        private SkillResponse Intent(SkillRequest anfrage)
+        {
+            string alex = "Was soll ich damit?";
+            return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alex, "", null, DateTime.Now, true);
+        }
 
-      private SkillResponse LaunchRequestHandler(SkillRequest anfrage)
+        private SkillResponse EndRequestHelper(SkillRequest anfrage)
+        {
+            string alexasAnt = "Danke, ich springe jetzt in Ruhe aus meinem Fenster";
+            return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAnt, "", null, DateTime.Now, true);
+        }
+        private SkillResponse LaunchRequestHandler(SkillRequest anfrage)
       {
-         string alexasAntwort = "";
-         return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
+         string alexasAntwort = "Geh weg, ich will aleine sein";
+         return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort,"", null, DateTime.Now, false);
       }
-      /*private SkillResponse IntentRequestHandler(SkillRequest anfrage)
+      
+        private SkillResponse IntentRequestHandler(SkillRequest anfrage)
       {
          //Intents überprüfen
          //Je nach Intent arbeiten
          var intent = (IntentRequest)anfrage.Request;
-        if(intent.Intent.Name.Equals(""))
+            string alexasAntwort = "";
+        if(intent.Intent.Name.Equals("ersterIntent"))
         {
-        ...
-        }
-        else if (...)
-        {
-        ...
-        }
+                int slotValue = anfrage.GetSlotValueInt("Name", -1);
+                if (slotValue == 1)
+                {
+                    alexasAntwort = "Hallo Niclas";
 
-         return 
-      } */
+                }
+                else if (slotValue == 2)
+
+                {
+                    alexasAntwort = "Wer?";
+                }
+                else if (slotValue == 3)
+                {
+                    alexasAntwort = "Wer?";
+                }
+                else if (slotValue == 4)
+                {
+                    alexasAntwort = "Wer?";
+                }
+                else if (slotValue == 5)
+                {
+                    alexasAntwort = "Wer?";
+                }
+                else if (slotValue== 6)
+                {
+                    alexasAntwort = "Wer?";
+                }
+                else if (slotValue== 7)
+                {
+                    alexasAntwort = "0,125";
+
+                }
+               
+            }
+         else if (intent.Intent.Name.Equals("AMAZON.StopIntent"))
+             {
+                 alexasAntwort = "Danke, ich springe jetzt in ruhe aus meinem Fenster";
+                return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, true);
+            }
+           else if (intent.Intent.Name.Equals("Frage"))
+                {
+                alexasAntwort = "Ich heiße Alexa";
+
+               
+                return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
+            }
+            
+
+            return AlexaAntwortHelfer.GibEinfacheAntwort(anfrage, SkillTypen.Ended, alexasAntwort, "", null, DateTime.Now, false);
+        }
+        
 
 
       // ##############################################################################################################
@@ -178,3 +234,4 @@ namespace Essensplan.Controllers
         }
     }
 }
+
