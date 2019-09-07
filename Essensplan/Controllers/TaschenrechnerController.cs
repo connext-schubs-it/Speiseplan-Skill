@@ -56,7 +56,7 @@ namespace Essensplan.Controllers
                 {
                     var intentAnfrage = (IntentRequest)anfrage.Request;
 
-                    if (intentAnfrage.Intent.Name.Equals("")) //<-- Hier der Name von deinem Intent, z.B. BerechnenIntent
+                    if (intentAnfrage.Intent.Name.Equals("Craigory")) //<-- Hier der Name von deinem Intent, z.B. BerechnenIntent
                     {
                         //Tritt nur auf, wenn der entsprechende Intent gestartet wird
                         //Wiederholt sich solange, bis 2 Zahlen und die entsprechende Rechenoperation genannt wurden
