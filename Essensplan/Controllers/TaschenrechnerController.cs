@@ -46,7 +46,7 @@ namespace Essensplan.Controllers
                 {
                     //Tritt nur auf, wenn man den Skill startet
 
-                    string bildschirmText = "Hallo. Ich bin Elias Taschenrechner";
+                    string bildschirmText = "Hallo. Ich bin ein Alexa Taschenrechner";
                     string ueberschrift = "Taschenrechner";
                     string sprachausgabe = bildschirmText;
 
@@ -56,7 +56,7 @@ namespace Essensplan.Controllers
                 {
                     var intentAnfrage = (IntentRequest)anfrage.Request;
 
-                    if (intentAnfrage.Intent.Name.Equals("Taschenrechner")) //<-- Hier der Name von deinem Intent, z.B. BerechnenIntent
+                    if (intentAnfrage.Intent.Name.Equals("")) //<-- Hier der Name von deinem Intent, z.B. BerechnenIntent
                     {
                         //Tritt nur auf, wenn der entsprechende Intent gestartet wird
                         //Wiederholt sich solange, bis 2 Zahlen und die entsprechende Rechenoperation genannt wurden
