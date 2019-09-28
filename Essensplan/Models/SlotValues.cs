@@ -5,5 +5,7 @@
         Zahl_1 = 1,
         Zahl_2 = 2,
         Operation = 3,
+        Tag = 4,
+
     }
 }
